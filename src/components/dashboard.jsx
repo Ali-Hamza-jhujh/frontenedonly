@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { 
   Plus, 
   Calendar as CalendarIcon, 
@@ -101,15 +101,14 @@ const [userInfo, setUserInfo] = useState({
     caseId: ''
   });
 
-  useEffect(() => {
-    fetchData();
-     const storedUserInfo = localStorage.getItem('userInfo');
-    if (storedUserInfo) {
-      setUserInfo(JSON.parse(storedUserInfo));
-    }
-  }, []);
+  const showNotification = (message, type = 'success') => {
+    setNotification({ show: true, message, type });
+    setTimeout(() => {
+      setNotification({ show: false, message: '', type: '' });
+    }, 3000);
+  };
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
       const config = {
@@ -129,14 +128,15 @@ const [userInfo, setUserInfo] = useState({
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const showNotification = (message, type = 'success') => {
-    setNotification({ show: true, message, type });
-    setTimeout(() => {
-      setNotification({ show: false, message: '', type: '' });
-    }, 3000);
-  };
+  useEffect(() => {
+    fetchData();
+     const storedUserInfo = localStorage.getItem('userInfo');
+    if (storedUserInfo) {
+      setUserInfo(JSON.parse(storedUserInfo));
+    }
+  }, [fetchData]);
 
   // Helper function to get week start
   function getWeekStart(date) {
