@@ -25,7 +25,7 @@ import {
 import axios from 'axios';
 
 import './dashboard.css';
-export default function AdminDashboard() {
+export default function MemberDashboard() {
   const [activeView, setActiveView] = useState('overview');
   const [calendarView, setCalendarView] = useState('monthly'); // 'today', 'weekly', 'monthly'
   const [cases, setCases] = useState([]);
